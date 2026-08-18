@@ -43,7 +43,7 @@ def log_dag_run(**context):
 with DAG(
     dag_id="structured_dags",
     default_args=default_args,
-    schedule_interval="@daily",
+    schedule_interval="@weekly",
     start_date=datetime(2024, 1, 1),
     catchup=False,
     template_searchpath=["/home/airflow/gcs/dags/sql"],
