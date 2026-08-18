@@ -1,7 +1,3 @@
--- dq_checks.sql
--- Runs all 6 brief-mandated checks and logs every failing record into ops.dq_failures.
--- Params: @project, @curated_dataset, @ops_dataset, @run_date, @run_id
-
 INSERT INTO `@project.@ops_dataset.dq_failures`
   (table_name, rule_name, record_id, reason, run_id, checked_at)
 
