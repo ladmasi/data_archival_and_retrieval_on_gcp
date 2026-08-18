@@ -2,8 +2,6 @@
 -- Run once, before the first DAG trigger. Creates every table that
 -- MERGE/INSERT tasks write into. Raw tables are NOT created here — they're
 -- auto-created by GCSToBigQueryOperator's CREATE_IF_NEEDED on first load.
--- Replace @project before running, or use `bq query` with --parameter,
--- or just find/replace @project with your actual project id.
 
 -- ===================== CURATED =====================
 
