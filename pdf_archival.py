@@ -76,9 +76,7 @@ def list_new_pdfs(**context):
     all_pdf_paths = gcs.list(bucket_name=BUCKET, prefix="landing/pdfs/")
     all_filenames = [p.split("/")[-1] for p in all_pdf_paths if p.endswith(".pdf")]
 
-    # FIX: only VALID means "done." ORPHAN/INVALID/FAILED all retry every
-    # run until they resolve to VALID, instead of being permanently stuck
-    # the moment they get any row at all in ops.pdf_index.
+ 
     already_valid = {
         row["file_name"]
         for row in bq_client.query(
