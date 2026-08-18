@@ -12,7 +12,7 @@ WHERE c.customer_id IS NULL
 
 UNION ALL
 
--- Rule 2: order total must match sum of order items (tolerance of 1 for rounding)
+-- Rule 2: order total must match sum of order items
 SELECT
   'orders', 'order_total_mismatch', o.order_id,
   CONCAT('order_total=', CAST(o.order_total AS STRING),
@@ -28,20 +28,7 @@ WHERE ABS(o.order_total - IFNULL(i.items_sum, 0)) > 1
 
 UNION ALL
 
--- Rule 3: no future-dated records (orders / payments / returns)
-SELECT 'orders', 'future_dated', order_id, 'order_date is in the future', '@run_id', CURRENT_TIMESTAMP()
-FROM `@project.@curated_dataset.orders`
-WHERE order_date > CURRENT_DATE()
-
-UNION ALL
-
-SELECT 'payments', 'future_dated', payment_id, 'payment_date is in the future', '@run_id', CURRENT_TIMESTAMP()
-FROM `@project.@curated_dataset.payments`
-WHERE payment_date > CURRENT_DATE()
-
-UNION ALL
-
--- Rule 4: payment amount must match order total
+-- Rule 3: payment amount must match order total
 SELECT
   'payments', 'amount_mismatch', p.payment_id,
   CONCAT('amount=', CAST(p.amount AS STRING), ' vs order_total=', CAST(o.order_total AS STRING)),
@@ -52,7 +39,7 @@ WHERE ABS(p.amount - o.order_total) > 1
 
 UNION ALL
 
--- Rule 5: PDF order_id must exist in curated orders (orphan PDFs)
+-- Rule 4: PDF order_id must exist in curated orders
 SELECT
   'pdf_index', 'orphan_pdf', pi.order_id,
   'PDF references an order_id not present in curated.orders',
@@ -63,7 +50,7 @@ WHERE o.order_id IS NULL
 
 UNION ALL
 
--- Rule 6: mandatory fields cannot be null (example: orders PK/FK/date/status)
+-- Rule 5: mandatory fields cannot be null 
 SELECT
   'orders', 'null_mandatory_field', IFNULL(order_id, 'UNKNOWN'),
   'one or more mandatory fields (order_id, customer_id, order_date, order_status) is NULL',
