@@ -37,24 +37,17 @@ WHERE ABS(o.order_total - IFNULL(i.items_sum, 0)) > 1
 -- orders
 --    │
 --    │ order_id
---    ▼
 -- LEFT JOIN
 --    │
---    ▼
 -- Calculate SUM(quantity × unit_price)
 --    │
---    ▼
--- Compare:
--- orders.order_total
---        vs
--- items_sum
+-- Compare: orders.order_total vs items_sum
 --    │
---    ▼
 -- Difference > 1?
 --    │
---    ├── NO  → Valid
+--    ├── NO  -> Valid
 --    │
---    └── YES → Create data-quality error
+--    └── YES -> Create data-quality error
 
 UNION ALL
 
@@ -126,7 +119,7 @@ WHERE order_id IS NULL OR customer_id IS NULL OR order_date IS NULL OR order_sta
         --                           │
         --                    
         --                "null_mandatory_field"
-        
+
 
 UNION ALL
 
