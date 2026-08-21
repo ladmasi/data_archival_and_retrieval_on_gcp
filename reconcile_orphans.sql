@@ -1,6 +1,5 @@
 -- reconcile_orphans.sql
--- Re-checks any pdf_index row currently marked ORPHAN against the latest
--- curated.orders. If the order_id now exists (it arrived in a later load),
+-- Re-checks any pdf_index row currently marked ORPHAN against the latest curated.orders. If the order_id now exists (it arrived in a later load),
 -- flip the status to VALID so it stops showing up in the orphan report.
 
 UPDATE `@project.@ops_dataset.pdf_index` pi
