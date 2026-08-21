@@ -1,18 +1,3 @@
-"""
-weekly_housekeeping.py
-
-Two fixes applied:
-1. dq_summary_report's params used to pass the literal string "{{ ds }}"
-   through params.run_date, which never got a second Jinja render pass --
-   the SQL file now references {{ ds }} directly instead, which resolves
-   correctly since Airflow macros work when written directly into a
-   templated field.
-2. log_dag_run called BigQueryHook.insert_rows_json() directly -- that
-   method only exists on google.cloud.bigquery.Client, reached via
-   .get_client(). Same bug already fixed in structured_dags.py and
-   pdf_archival.py; this file just hadn't been touched yet.
-"""
-
 from datetime import datetime, timedelta
 
 from airflow import DAG
