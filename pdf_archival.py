@@ -8,6 +8,7 @@ from airflow.operators.python import PythonOperator, ShortCircuitOperator
 from airflow.utils.trigger_rule import TriggerRule
 from airflow.providers.google.cloud.hooks.gcs import GCSHook
 from airflow.providers.google.cloud.hooks.bigquery import BigQueryHook
+from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 
 PROJECT = Variable.get("gcp_project", default_var="")
 BUCKET = Variable.get("archive_bucket", default_var="")
@@ -76,7 +77,7 @@ def list_new_pdfs(**context):
     all_pdf_paths = gcs.list(bucket_name=BUCKET, prefix="landing/pdfs/")
     all_filenames = [p.split("/")[-1] for p in all_pdf_paths if p.endswith(".pdf")]
 
- 
+   
     already_valid = {
         row["file_name"]
         for row in bq_client.query(
@@ -260,6 +261,8 @@ def index_to_bigquery(**context):
         print(f"{failed_count} file(s) failed to move; will retry next run.")
 
 
+
+
 def log_dag_run(**context):
     ti = context["ti"]
     dag_run = context["dag_run"]
@@ -327,7 +330,11 @@ with DAG(
         python_callable=log_dag_run,
         trigger_rule=TriggerRule.ALL_DONE,
     )
+    t6_trigger_weekly_housekeeping = TriggerDagRunOperator(
+        task_id="t6_trigger_weekly_housekeeping",
+        trigger_dag_id="weekly_housekeeping",
+        trigger_rule=TriggerRule.ALL_DONE,
+        wait_for_completion=False,
+    )
 
-    t0_preflight >> t1_list >> t1b_short_circuit >> t2_parse
-    t2_parse >> [t4a_archive, t4b_quarantine]
-    [t4a_archive, t4b_quarantine] >> t3_index >> t5_audit
+    t0_preflight >> t1_list >> t1b_short_circuit >> t2_parse >> [t4a_archive, t4b_quarantine] >> t3_index >> t5_audit >> t6_trigger_weekly_housekeeping
