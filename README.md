@@ -5,4 +5,7 @@
 --> The objective of this project was to design an end-to-end archival solution for both structured and unstructured data. The input consists of structured CSV data, along with unstructured invoice PDFs.
 
 --> The overall goal is not simply to load the data, but to build a reliable archival platform where data can be archived, retrieved, and monitored.
-The assignment specifically requires the use of  BigQuery, Cloud Storage and Cloud Composer, with orchestration, data quality checks, failure handling, auditing and cost awareness.
+The assignment specifically requires the use of BigQuery, Cloud Storage and Cloud Composer, with orchestration, data quality checks, failure handling, auditing and cost awareness.
+
+--> Cloud Storage acts as the landing layer. The structured CSV files are loaded into BigQuery raw tables and then transformed into curated datasets. The PDF invoices follow a separate unstructured-data flow, where they are validated against the structured order data and then either archived or quarantined.
+Cloud Composer, through Airflow, is responsible for orchestrating these processes.
