@@ -1,9 +1,6 @@
 -- schema_curated_ops.sql
--- Run once, before the first DAG trigger. Creates every table that
--- MERGE/INSERT tasks write into. Raw tables are NOT created here — they're
--- auto-created by GCSToBigQueryOperator's CREATE_IF_NEEDED on first load.
-
--- ===================== CURATED =====================
+-- Run once, before the first DAG trigger. Creates every table that MERGE/INSERT tasks write into. 
+-- CURATED TABLES
 
 CREATE TABLE IF NOT EXISTS `@project.curated.customers` (
   customer_id STRING NOT NULL,
@@ -71,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `@project.curated.pdf_manifest` (
 )
 CLUSTER BY order_id;
 
--- ===================== OPS =====================
+-- OPS/ AUIDT TABLES
 
 CREATE TABLE IF NOT EXISTS `@project.ops.audit_log` (
   run_id STRING,
